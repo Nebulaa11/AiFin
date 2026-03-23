@@ -1,0 +1,6 @@
+age,income_monthly,expenses_monthly,savings,total_loan_principal,weighted_loan_rate,months_to_emergency_fund,risk_tolerance_encoded,best_strategy_label,projected_net_worth_10y
+28,80000,40000,200000,500000,10,6,1,repay_loan_first,5200000
+35,120000,70000,500000,0,0,8,2,invest_aggressive,9800000
+42,90000,85000,50000,1200000,9.5,2,0,balanced,3100000
+31,60000,35000,150000,300000,12,5,1,repay_loan_first,2800000
+50,150000,60000,2000000,0,0,24,2,invest_aggressive,15000000

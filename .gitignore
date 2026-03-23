@@ -1,0 +1,11 @@
+﻿__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+.env
+.venv/
+backend/.venv/
+backend/models_saved/
+frontend/node_modules/
+frontend/dist/
