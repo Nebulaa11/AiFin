@@ -1,0 +1,43 @@
+question,intent
+hey,greeting
+hi,greeting
+hello,greeting
+good morning,greeting
+how are you,greeting
+sup,greeting
+what can you do,greeting
+help me,greeting
+which loan should I pay first,debt_payoff
+how to pay off debt,debt_payoff
+debt payoff order,debt_payoff
+close my loan faster,debt_payoff
+highest interest loan,debt_payoff
+prepay loan,debt_payoff
+should I invest or pay debt,debt_vs_invest
+invest vs loan,debt_vs_invest
+pay loan or sip,debt_vs_invest
+debt or mutual fund,debt_vs_invest
+where should extra money go,debt_vs_invest
+emergency fund,emergency_fund
+how much savings buffer,emergency_fund
+rainy day fund,emergency_fund
+six months expenses,emergency_fund
+how much to invest monthly,sip_advice
+sip amount,sip_advice
+monthly investment,sip_advice
+how much should I invest,sip_advice
+start investing,sip_advice
+best strategy,strategy_advice
+what strategy do you recommend,strategy_advice
+balanced or aggressive,strategy_advice
+compute my plan,strategy_advice
+optimize my finances,strategy_advice
+my goals,goal_advice
+am I on track for my goal,goal_advice
+house goal,goal_advice
+retirement goal,goal_advice
+what is my net worth,net_worth
+how am I doing financially,net_worth
+financial summary,net_worth
+total debt,net_worth
+what are my assets,net_worth

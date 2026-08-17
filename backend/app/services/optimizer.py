@@ -4,6 +4,8 @@ from dataclasses import dataclass
 
 from app.models.schemas import StrategyResult, UserProfile
 from app.services.finance_engine import FinanceEngine
+from app.services.goal_planner import goal_fit_score
+from app.services.ml_predictor import MLPredictor
 from app.services.simulator import StrategySimulator
 
 
@@ -19,6 +21,7 @@ class OptimizationEngine:
     def __init__(self):
         self.engine = FinanceEngine()
         self.sim = StrategySimulator(self.engine)
+        self.ml = MLPredictor()
 
     def loan_repayment_order(self, profile: UserProfile) -> list[str]:
         loans = sorted(profile.loans, key=lambda x: x.interest_rate, reverse=True)
@@ -83,18 +86,22 @@ class OptimizationEngine:
         prep = spec.loan_prepayment_monthly
         return min(100.0, months_cov * 8.0 + prep / max(profile.income_monthly, 1.0) * 30.0)
 
-    def _composite(self, nw: float, risk: float, stability: float) -> float:
-        return nw * 1.0 - risk * 500.0 + stability * 200.0
+    def _composite(self, nw: float, risk: float, stability: float, goal_fit: float) -> float:
+        return nw * 1.0 - risk * 500.0 + stability * 200.0 + goal_fit * 3000.0
 
     def evaluate(self, profile: UserProfile, horizon_years: int = 10) -> list[StrategyResult]:
         specs = self.build_strategies(profile)
+        ml_hint = self.ml.predict_strategy(profile)
         results: list[StrategyResult] = []
         for sp in specs:
             out = self.sim.simulate_years(profile, horizon_years, sp.monthly_investment, sp.loan_prepayment_monthly)
             nw = out.net_worth_end
             risk = self._risk_score(profile, sp, nw)
             stab = self._stability(profile, sp)
-            comp = self._composite(nw, risk, stab)
+            gf = goal_fit_score(profile, nw, sp.monthly_investment, sp.loan_prepayment_monthly)
+            comp = self._composite(nw, risk, stab, gf)
+            if ml_hint and sp.name == ml_hint:
+                comp += 50_000.0
             results.append(
                 StrategyResult(
                     name=sp.name,
@@ -105,7 +112,11 @@ class OptimizationEngine:
                     composite_score=comp,
                     monthly_investment_suggested=sp.monthly_investment,
                     loan_prepayment_monthly=sp.loan_prepayment_monthly,
+                    goal_fit_score=gf,
                 )
             )
         results.sort(key=lambda r: r.composite_score, reverse=True)
         return results
+
+    def ml_strategy_hint(self, profile: UserProfile) -> str | None:
+        return self.ml.predict_strategy(profile)
